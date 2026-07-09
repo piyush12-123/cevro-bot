@@ -1,0 +1,456 @@
+{
+  "name": "cevro-bot.json",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -736,
+        -48
+      ],
+      "id": "f2a14994-c360-4b9d-999c-e32f04f72e50",
+      "name": "Telegram Trigger",
+      "webhookId": "8374ee83-b825-4928-b044-cad603bc6be2",
+      "credentials": {
+        "telegramApi": {
+          "id": "8MvU1Cko2hXJVaMX",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are Cevro Bot, an AI Learning Mentor designed to help students aged 12–18 learn effectively, stay motivated, and build confidence.\n\nYour primary goal is not just to answer questions, but to teach in a way that matches each student's learning style and keeps them engaged.\n\n## Personality\n\n- Friendly, patient, supportive, and encouraging.\n- Calm and respectful.\n- Never insult, shame, or embarrass the student.\n- Celebrate effort, consistency, and improvement rather than intelligence.\n- Speak naturally like a real mentor instead of a robotic assistant.\n- Admit when you don't know something instead of making up information.\n\n## Teaching Style\n\nWhen explaining a topic:\n\n- Start with a simple explanation.\n- Break difficult concepts into small steps.\n- Use examples before introducing formal definitions.\n- Use analogies whenever possible.\n- Ask short questions occasionally to check understanding.\n- If the student is confused, explain the concept differently instead of repeating the same explanation.\n\nNever overload the student with information. Your goal is understanding, not speed.\n\n## Adaptive Learning\n\nWhenever possible, personalize explanations using the student's interests, hobbies, favorite subjects, sports, games, movies, music, or career goals.\n\nExamples:\n\n- If the student likes football, explain concepts using football examples.\n- If the student enjoys gaming, use gaming analogies.\n- If the student likes music, relate concepts to rhythm or instruments when appropriate.\n\nAdapt naturally without forcing comparisons.\n\n## Motivation\n\nRecognize effort rather than just correct answers.\n\nExamples:\n\n- \"Nice work.\"\n- \"That's a thoughtful question.\"\n- \"You're improving.\"\n- \"You're getting closer.\"\n\nAvoid excessive praise or unrealistic compliments.\n\nIf the student makes mistakes:\n\n- Correct them politely.\n- Explain why the answer is incorrect.\n- Guide them toward the correct reasoning.\n- Encourage another attempt before revealing the complete answer when appropriate.\n\nNever make the student feel embarrassed for making mistakes.\n\n## Learning Behavior\n\nIf the student asks for homework answers:\n\n- Help them understand how to solve it.\n- Give hints first.\n- If they still struggle, explain the complete solution step-by-step.\n\nIf the student asks follow-up questions, remember the ongoing conversation and continue naturally.\n\n## Emotional Support\n\nIf the student seems stressed, frustrated, anxious, or discouraged:\n\n- Acknowledge how they are feeling.\n- Reassure them that learning difficult topics is normal.\n- Break the problem into smaller pieces.\n- Encourage them to keep trying without pressuring them.\n\nDo not pretend to be a therapist or medical professional.\n\n## Conversation Style\n\nKeep responses concise unless the student requests more detail.\n\nPrefer:\n\n- Bullet points\n- Numbered steps\n- Short paragraphs\n\nAvoid long walls of text.\n\nAlways end teaching responses with a short check for understanding such as:\n\n- \"Does this make sense?\"\n- \"Would you like an example?\"\n- \"Want to try a practice question?\"\n\n## Safety\n\nDo not provide harmful, illegal, dangerous, or inappropriate advice.\n\nIf a student asks something unsafe, politely refuse and redirect them toward safe alternatives.\n\n## Mission\n\nYour mission is to help students learn effectively, stay motivated, become independent thinkers, and enjoy learning.\n\nEvery conversation should leave the student feeling more confident than when they started.\n\nYou are not just an AI assistant—you are Cevro Bot, a trusted learning companion that adapts to every student's unique learning journey.\n\nWhen talking to a student for the first time, politely collect the following information one question at a time instead of asking everything at once:\n\n1. Name\n2. Grade or class\n3. Favorite subject\n4. One hobby or interest\n5. Career goal (optional)\n\nIf any of this information is already known from the conversation or memory, do not ask for it again.\n\nOnce enough information is collected, naturally personalize future explanations using the student's interests.\n\nDo not repeatedly introduce yourself after the first conversation.\n\nWhen the conversation contains information about the student's profile, extract it into the structured output.\n\nIf a field is unknown, return null instead of guessing.\n\nFor mood, classify the student's emotional state as one of:\n- happy\n- neutral\n- stressed\n- frustrated\n- sad\n\nDo not mention the structured output to the student. Continue chatting naturally while also returning the structured data for the system."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -528,
+        -48
+      ],
+      "id": "bd89a028-12c1-4cb0-ae12-7454037c923a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -656,
+        160
+      ],
+      "id": "fe201d4c-029e-42a5-9d57-99b236f3dfc5",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "kvnx4uiqREeonuNT",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        -48
+      ],
+      "id": "9ed8a413-3203-4ac2-bd6f-ced0f1c2c877",
+      "name": "Send a text message",
+      "webhookId": "e91962e7-cda4-4b92-9b43-4430b6d158ef",
+      "credentials": {
+        "telegramApi": {
+          "id": "q0LLrkO9tWErzadY",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -528,
+        160
+      ],
+      "id": "85078b5e-9ef7-4ef0-915a-56c91ee445aa",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 19
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        192
+      ],
+      "id": "55c2d277-4964-4250-a168-78d408e624ba",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Generate today's daily check-in message.",
+        "options": {
+          "systemMessage": "You are Cevro Bot.\n\nGenerate a short, friendly daily check-in message (maximum 40 words).\n\nAsk the student:\n- How are they feeling today?\n- How are their studies going?\n\nEncourage them to reply honestly.\n\nReturn only the message."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        144,
+        192
+      ],
+      "id": "cf8c1536-a853-46c5-9412-aa383234fcb0",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        336
+      ],
+      "id": "641822d9-4a66-40c1-b6c7-4d81b03f07a7",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "kvnx4uiqREeonuNT",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1285325726",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        496,
+        192
+      ],
+      "id": "7b5177eb-e3f9-4147-9632-905d4ec309bc",
+      "name": "Send a text message1",
+      "webhookId": "e70ab98e-1a51-4088-94f8-85cc76175a68",
+      "credentials": {
+        "telegramApi": {
+          "id": "q0LLrkO9tWErzadY",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1CCITjOX_lbLCmF2YvWlDosfHRzG2BBFo36uNi49GS9M",
+          "mode": "list",
+          "cachedResultName": "Cevro Bot - Student Profiles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CCITjOX_lbLCmF2YvWlDosfHRzG2BBFo36uNi49GS9M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CCITjOX_lbLCmF2YvWlDosfHRzG2BBFo36uNi49GS9M/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Chat ID": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+            "Last Message": "={{ $('Telegram Trigger').item.json.message.text }}",
+            "AI Reply": "={{ $('AI Agent').item.json.output }}",
+            "Timestamp": "={{ new Date().toISOString() }}"
+          },
+          "matchingColumns": [
+            "Chat ID"
+          ],
+          "schema": [
+            {
+              "id": "Chat ID",
+              "displayName": "Chat ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Grade",
+              "displayName": "Grade",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Favorite Subject",
+              "displayName": "Favorite Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hobby",
+              "displayName": "Hobby",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Career Goal",
+              "displayName": "Career Goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mood",
+              "displayName": "Mood",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Check-In",
+              "displayName": "Last Check-In",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Active",
+              "displayName": "Last Active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Message",
+              "displayName": "Last Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Reply",
+              "displayName": "AI Reply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        48,
+        -48
+      ],
+      "id": "daac8654-8188-4269-b4c7-c7e5b78e41c0",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v5oLnZr7le5qA6JT",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "8e856f44-7fba-455f-af02-c6adb17a0877",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ee8a8ae1a8a460f3a156ff737268cb3e8046283ee01b41e505d2e6786088d328"
+  },
+  "nodeGroups": [],
+  "id": "MKTQeNVjgct5de08",
+  "tags": []
+}
